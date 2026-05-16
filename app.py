@@ -1,12 +1,4 @@
 import streamlit as st
-
-st.title("Proyecto final UCG")
-
-st.sidebar.title("Parámetros")
-
-st.sidebar.image("Paython_Logo.png")
-
-import streamlit as st
 import pandas as pd
 
 st.title("Proyecto final UCG")
