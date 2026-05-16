@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("Proyecto UCG")
+st.title("Proyecto final UCG")
 
 st.sidebar.title("Parámetros")
 
