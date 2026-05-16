@@ -13,7 +13,7 @@ st.title("Proyecto final UCG")
 
 st.sidebar.title("Parámetros")
 
-st.sidebar.image("Python_logo.png")
+st.sidebar.image("Paython_logo.png")
 
 uploaded_files = st.file_uploader(
     "Upload data", accept_multiple_files=True, type="csv"
