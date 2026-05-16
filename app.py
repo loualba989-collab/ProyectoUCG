@@ -4,4 +4,4 @@ st.title("Proyecto UCG")
 
 st.sidebar.title("Parámetros")
 
-st.sidebar.imagen("Paython_Logo.png")
+st.sidebar.image("Paython_Logo.png")
