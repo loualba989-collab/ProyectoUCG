@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 
-
 # ======================================
 # CLASE DATASET (POO)
 # ======================================
@@ -35,16 +34,8 @@ class DatasetLactancia:
 
             return None
 
-    def dimensiones(self):
-
-        if self.df is not None:
-            return self.df.shape
-
-        return None
-
-
 # ======================================
-# PATRON FACTORY
+# PATRÓN FACTORY
 # ======================================
 
 class GraficoFactory:
@@ -90,9 +81,8 @@ class GraficoFactory:
 
         return None
 
-
 # ======================================
-# DATASET GLOBAL
+# CARGA DATASET
 # ======================================
 
 DATA_PATH = "lactancia_analisis.xlsx"
@@ -101,8 +91,36 @@ dataset_instance = DatasetLactancia(
     DATA_PATH
 )
 
-df = dataset_instance.cargar_datos()
+df_original = dataset_instance.cargar_datos()
 
+# ======================================
+# FILTROS
+# ======================================
+
+st.sidebar.header(
+    "Filtros"
+)
+
+region = st.sidebar.selectbox(
+    "Seleccione Región",
+    ["Todas"] +
+    sorted(
+        df_original["region"]
+        .dropna()
+        .unique()
+        .tolist()
+    )
+)
+
+if region == "Todas":
+
+    df = df_original.copy()
+
+else:
+
+    df = df_original[
+        df_original["region"] == region
+    ]
 
 # ======================================
 # PAGINA INICIO
@@ -116,41 +134,64 @@ def page_inicio():
     )
 
     st.title(
-        "Factores asociados a la Lactancia Materna Exclusiva en Ecuador"
+        "🍼 Factores asociados a la Lactancia Materna Exclusiva en Ecuador"
     )
 
     st.markdown("""
-    La lactancia materna exclusiva constituye una práctica fundamental para la salud infantil y el desarrollo adecuado durante los primeros meses de vida.
+    Esta aplicación presenta un análisis exploratorio de datos basado en la Encuesta Nacional sobre Desnutrición Infantil (ENDI).
 
-    Este proyecto utiliza información proveniente de la Encuesta Nacional sobre Desnutrición Infantil (ENDI) para analizar factores asociados a la lactancia materna exclusiva en Ecuador.
-
-    La aplicación fue desarrollada mediante Python y Streamlit, integrando conceptos de Ciencia de Datos, Programación Orientada a Objetos y visualización interactiva.
+    El objetivo es identificar factores asociados a la duración de la lactancia materna exclusiva en Ecuador mediante técnicas de Ciencia de Datos, Programación Orientada a Objetos y visualización interactiva.
     """)
 
     st.subheader(
-        "Objetivo del Proyecto"
+        "Indicadores Generales"
     )
 
-    st.info("""
-    Analizar los factores asociados a la lactancia materna exclusiva en Ecuador mediante técnicas de análisis exploratorio de datos y visualización interactiva.
-    """)
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        st.metric(
+            "Registros",
+            len(df)
+        )
+
+    with col2:
+
+        st.metric(
+            "Variables",
+            len(df.columns)
+        )
+
+    with col3:
+
+        st.metric(
+            "Promedio LME",
+            round(
+                df["meses_lactancia_exclusiva"].mean(),
+                2
+            )
+        )
+
+    st.success(
+        f"Filtro activo: {region}"
+    )
 
     st.subheader(
-        "Información del Dataset"
-    )
-
-    st.write(
-        f"Registros: {df.shape[0]}"
-    )
-
-    st.write(
-        f"Variables: {df.shape[1]}"
+        "Vista previa del Dataset"
     )
 
     st.dataframe(
         df.head()
     )
 
+    st.subheader(
+        "Variables Analizadas"
+    )
+
+    st.write(
+        list(df.columns)
+    )
 
 # ======================================
 # PAGINA VISUALIZACIONES
@@ -158,11 +199,17 @@ def page_inicio():
 
 def page_visualizaciones():
 
-    st.title("📈 Visualizaciones e Interpretación de Resultados")
+    st.title(
+        "📈 Visualizaciones Interactivas"
+    )
 
-    # =====================================================
+    st.success(
+        f"Filtro activo: {region}"
+    )
+
+    # ======================================
     # HISTOGRAMA
-    # =====================================================
+    # ======================================
 
     st.subheader(
         "Distribución de la Lactancia Materna Exclusiva"
@@ -180,15 +227,24 @@ def page_visualizaciones():
         use_container_width=True
     )
 
-    st.info("""
-    Interpretación:
-    Este gráfico muestra cómo se distribuyen los meses de lactancia materna exclusiva en la población analizada.
-    Permite identificar los valores más frecuentes y observar si existen concentraciones o dispersión en la duración de la lactancia.
-    """)
+    promedio_lme = round(
+        df["meses_lactancia_exclusiva"].mean(),
+        2
+    )
 
-    # =====================================================
+    st.info(
+        f"""
+        Interpretación:
+
+        La duración promedio de la lactancia materna exclusiva es de {promedio_lme} meses.
+
+        Este gráfico permite observar cómo se distribuyen los registros y detectar concentraciones de casos.
+        """
+    )
+
+    # ======================================
     # REGION
-    # =====================================================
+    # ======================================
 
     st.subheader(
         "Lactancia Materna Exclusiva por Región"
@@ -212,6 +268,9 @@ def page_visualizaciones():
         df.groupby("region")
         ["meses_lactancia_exclusiva"]
         .mean()
+        .sort_values(
+            ascending=False
+        )
     )
 
     region_max = region_prom.idxmax()
@@ -219,14 +278,16 @@ def page_visualizaciones():
     st.info(
         f"""
         Interpretación:
-        El gráfico permite comparar la distribución de la lactancia materna exclusiva entre regiones.
-        La región con mayor promedio de lactancia es: {region_max}.
+
+        La región con mayor promedio de lactancia materna exclusiva es:
+
+        {region_max}
         """
     )
 
-    # =====================================================
+    # ======================================
     # AREA
-    # =====================================================
+    # ======================================
 
     st.subheader(
         "Lactancia Materna Exclusiva por Área de Residencia"
@@ -246,15 +307,17 @@ def page_visualizaciones():
         use_container_width=True
     )
 
-    st.info("""
-    Interpretación:
-    Este gráfico permite identificar diferencias entre áreas urbanas y rurales respecto a la duración de la lactancia materna exclusiva.
-    Las diferencias observadas pueden estar asociadas a factores sociales, económicos o culturales.
-    """)
+    st.info(
+        """
+        Interpretación:
 
-    # =====================================================
+        Este gráfico permite comparar los meses de lactancia entre zonas urbanas y rurales.
+        """
+    )
+
+    # ======================================
     # FORMULA
-    # =====================================================
+    # ======================================
 
     st.subheader(
         "Lactancia Materna según Consumo de Fórmula"
@@ -274,15 +337,56 @@ def page_visualizaciones():
         use_container_width=True
     )
 
-    st.info("""
-    Interpretación:
-    Este gráfico explora la relación entre el uso de fórmula infantil y la duración de la lactancia materna exclusiva.
-    Los resultados muestran asociaciones descriptivas y no implican causalidad directa.
-    """)
+    st.info(
+        """
+        Interpretación:
 
-    # =====================================================
-    # MADRES QUE TRABAJAN - PASTEL
-    # =====================================================
+        Este análisis explora la relación entre el consumo de fórmula infantil y la duración de la lactancia materna exclusiva.
+        """
+    )
+
+    # ======================================
+    # USO BIBERON
+    # ======================================
+
+    st.subheader(
+        "Uso de Biberón"
+    )
+
+    biberon_df = (
+        df["uso_biberon"]
+        .value_counts()
+        .reset_index()
+    )
+
+    biberon_df.columns = [
+        "uso_biberon",
+        "cantidad"
+    ]
+
+    fig_biberon = px.pie(
+        biberon_df,
+        names="uso_biberon",
+        values="cantidad",
+        title="Proporción de Uso de Biberón"
+    )
+
+    st.plotly_chart(
+        fig_biberon,
+        use_container_width=True
+    )
+
+    st.info(
+        """
+        Interpretación:
+
+        El gráfico muestra la proporción de niños que utilizan biberón dentro de la población analizada.
+        """
+    )
+
+    # ======================================
+    # MADRES TRABAJADORAS
+    # ======================================
 
     st.subheader(
         "Distribución de Madres que Trabajan"
@@ -311,15 +415,17 @@ def page_visualizaciones():
         use_container_width=True
     )
 
-    st.info("""
-    Interpretación:
-    Este gráfico muestra la proporción de madres que trabajan y aquellas que no trabajan dentro de la muestra analizada.
-    Permite conocer la composición de la población estudiada.
-    """)
+    st.info(
+        """
+        Interpretación:
 
-    # =====================================================
-    # COMPARACION TRABAJO VS LACTANCIA
-    # =====================================================
+        Permite identificar la composición laboral de las madres incluidas en el estudio.
+        """
+    )
+
+    # ======================================
+    # TRABAJO VS LACTANCIA
+    # ======================================
 
     st.subheader(
         "Promedio de Lactancia según Condición Laboral"
@@ -337,7 +443,7 @@ def page_visualizaciones():
         x="madre_trabaja",
         y="meses_lactancia_exclusiva",
         color="madre_trabaja",
-        title="Promedio de Meses de Lactancia según Condición Laboral"
+        title="Promedio de Lactancia según Condición Laboral"
     )
 
     st.plotly_chart(
@@ -352,16 +458,57 @@ def page_visualizaciones():
     ]
 
     st.success(
-        f"El grupo con mayor promedio de lactancia materna exclusiva es: "
-        f"{grupo_mayor['madre_trabaja']} "
-        f"con {round(grupo_mayor['meses_lactancia_exclusiva'],2)} meses."
+        f"""
+        El grupo con mayor promedio de lactancia corresponde a:
+
+        {grupo_mayor['madre_trabaja']}
+
+        con
+
+        {round(grupo_mayor['meses_lactancia_exclusiva'],2)}
+
+        meses.
+        """
     )
 
-    st.info("""
-    Interpretación:
-    La comparación permite evaluar si la condición laboral de la madre está asociada con diferencias en la duración promedio de la lactancia materna exclusiva.
-    Este resultado constituye un análisis exploratorio y puede servir como base para estudios más profundos.
-    """)
+    # ======================================
+    # EXPLORADOR DINAMICO
+    # ======================================
+
+    st.subheader(
+        "Explorador Interactivo"
+    )
+
+    variable = st.selectbox(
+        "Seleccione una variable",
+        [
+            "region",
+            "area_residencia",
+            "madre_trabaja",
+            "consume_formula",
+            "uso_biberon"
+        ]
+    )
+
+    resumen = (
+        df.groupby(variable)
+        ["meses_lactancia_exclusiva"]
+        .mean()
+        .reset_index()
+    )
+
+    fig_dynamic = px.bar(
+        resumen,
+        x=variable,
+        y="meses_lactancia_exclusiva",
+        color=variable,
+        title=f"Promedio de Lactancia según {variable}"
+    )
+
+    st.plotly_chart(
+        fig_dynamic,
+        use_container_width=True
+    )
 
 # ======================================
 # PAGINA ANALISIS
@@ -369,192 +516,44 @@ def page_visualizaciones():
 
 def page_analisis():
 
-    st.title("📊 Análisis de Resultados")
+    st.title(
+        "📊 Análisis de Resultados"
+    )
 
-    st.markdown("""
-    En esta sección se presentan indicadores descriptivos y hallazgos obtenidos a partir del análisis exploratorio del dataset relacionado con la lactancia materna exclusiva en Ecuador.
-    """)
-
-    # =====================================================
-    # INDICADORES PRINCIPALES
-    # =====================================================
-
-    promedio_lme = round(
+    promedio = round(
         df["meses_lactancia_exclusiva"].mean(),
         2
     )
 
-    max_lme = round(
-        df["meses_lactancia_exclusiva"].max(),
+    minimo = round(
+        df["meses_lactancia_exclusiva"].min(),
         2
     )
 
-    min_lme = round(
-        df["meses_lactancia_exclusiva"].min(),
+    maximo = round(
+        df["meses_lactancia_exclusiva"].max(),
         2
     )
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-
         st.metric(
             "Promedio",
-            promedio_lme
+            promedio
         )
 
     with col2:
-
         st.metric(
-            "Máximo",
-            max_lme
+            "Mínimo",
+            minimo
         )
 
     with col3:
-
         st.metric(
-            "Mínimo",
-            min_lme
+            "Máximo",
+            maximo
         )
-
-    st.info("""
-    Interpretación:
-    Los indicadores resumen permiten conocer el comportamiento general de la lactancia materna exclusiva dentro de la población analizada.
-    """)
-
-    # =====================================================
-    # ANALISIS POR REGION
-    # =====================================================
-
-    st.subheader(
-        "Análisis por Región"
-    )
-
-    region_prom = (
-        df.groupby("region")
-        ["meses_lactancia_exclusiva"]
-        .mean()
-        .sort_values(
-            ascending=False
-        )
-    )
-
-    st.dataframe(
-        region_prom
-    )
-
-    region_max = region_prom.idxmax()
-
-    st.success(
-        f"La región con mayor promedio de lactancia materna exclusiva es: {region_max}"
-    )
-
-    st.info("""
-    Interpretación:
-    Las diferencias entre regiones pueden estar asociadas a factores culturales, económicos, sociales y de acceso a servicios de salud.
-    """)
-
-    # =====================================================
-    # ANALISIS POR AREA
-    # =====================================================
-
-    st.subheader(
-        "Análisis por Área de Residencia"
-    )
-
-    area_prom = (
-        df.groupby("area_residencia")
-        ["meses_lactancia_exclusiva"]
-        .mean()
-        .sort_values(
-            ascending=False
-        )
-    )
-
-    st.dataframe(
-        area_prom
-    )
-
-    area_max = area_prom.idxmax()
-
-    st.success(
-        f"El área con mayor promedio de lactancia materna exclusiva es: {area_max}"
-    )
-
-    st.info("""
-    Interpretación:
-    El área de residencia puede influir en las prácticas de alimentación infantil debido a diferencias en estilos de vida y acceso a información.
-    """)
-
-    # =====================================================
-    # ANALISIS MADRE TRABAJA
-    # =====================================================
-
-    st.subheader(
-        "Análisis según Condición Laboral"
-    )
-
-    trabajo_prom = (
-        df.groupby("madre_trabaja")
-        ["meses_lactancia_exclusiva"]
-        .mean()
-        .sort_values(
-            ascending=False
-        )
-    )
-
-    st.dataframe(
-        trabajo_prom
-    )
-
-    trabajo_max = trabajo_prom.idxmax()
-
-    st.success(
-        f"El grupo con mayor promedio de lactancia corresponde a: {trabajo_max} la madre trabaja"
-    )
-
-    st.info("""
-    Interpretación:
-    La condición laboral de la madre puede influir en la continuidad de la lactancia materna exclusiva.
-    Este análisis permite observar diferencias descriptivas entre grupos.
-    """)
-
-    # =====================================================
-    # ANALISIS FORMULA INFANTIL
-    # =====================================================
-
-    st.subheader(
-        "Análisis según Consumo de Fórmula"
-    )
-
-    formula_prom = (
-        df.groupby("consume_formula")
-        ["meses_lactancia_exclusiva"]
-        .mean()
-        .sort_values(
-            ascending=False
-        )
-    )
-
-    st.dataframe(
-        formula_prom
-    )
-
-    formula_max = formula_prom.idxmax()
-
-    st.success(
-        f"El grupo con mayor promedio de consumo de leche de formula se da a los 42.22 meses"
-    )
-
-    st.info("""
-    Interpretación:
-    El consumo de fórmula infantil puede estar relacionado con cambios en las prácticas de lactancia.
-    Los resultados presentados son exploratorios y descriptivos.
-    """)
-
-    # =====================================================
-    # RANKING PROVINCIAS
-    # =====================================================
 
     st.subheader(
         "Ranking de Provincias"
@@ -573,21 +572,32 @@ def page_analisis():
         ranking
     )
 
-    st.info("""
-    Interpretación:
-    El ranking provincial permite identificar territorios con mayores y menores promedios de lactancia materna exclusiva.
-    """)
+    provincia_max = ranking.idxmax()
 
-    # =====================================================
-    # HALLAZGOS PRINCIPALES
-    # =====================================================
+    st.success(
+        f"La provincia con mejor promedio es: {provincia_max}"
+    )
 
     st.subheader(
         "Hallazgos Principales"
     )
 
-    st.markdown(f"""
-    
+    st.success(
+        f"Promedio general de lactancia: {promedio} meses."
+    )
+
+    st.success(
+        f"Provincia líder: {provincia_max}."
+    )
+
+    st.success(
+        "Existen diferencias entre regiones y áreas de residencia."
+    )
+
+    st.success(
+        "La condición laboral de la madre muestra diferencias en la duración promedio de lactancia."
+    )
+
 # ======================================
 # PAGINA CONCLUSIONES
 # ======================================
@@ -598,29 +608,35 @@ def page_conclusiones():
         "📝 Conclusiones"
     )
 
-    st.markdown("""
-    ### Conclusiones
+    promedio = round(
+        df["meses_lactancia_exclusiva"].mean(),
+        2
+    )
 
-    - Duración de Lactancia Materna Exclusiva: El promedio de meses de lactancia materna exclusiva es de aproximadamente 33.18 meses.
+    st.markdown(
+        f"""
 
-    - Factores Geográficos: La región `Costa` y el área `Urbana` muestran un promedio de LME más alto en comparación con 
-      `Sierra` y `Amazonía`, y el área `Rural` respectivamente.
+### Conclusiones
 
-    - Madres Trabajadoras: Contrario a algunas percepciones, las madres que trabajan muestran un promedio de Lactancia Materna Exclusiva más alto. 
-      Esto podría deberse a diversos factores, como un mayor nivel educativo, acceso a información o la posibilidad de permiso de lactancia y licencias 
-      de maternidad (en los casos donde estos datos están completos).
-      
-    - Licencia de Maternidad: Las madres con licencia de maternidad tienen una duración de Lactancia Materna Exclusiva significativamente mayor, 
-      lo que subraya la importancia de estas políticas de apoyo.
+- El promedio general de lactancia materna exclusiva fue de **{promedio} meses**.
 
-    - Uso de Fórmula: El análisis exploratorio sugiere que el uso de fórmula no está asociado con una menor Lactancia Materna Exclusiva.
-      
+- Factores Geográficos: La región `Costa` y el área `Urbana` muestran un promedio de Lactancia Materna Exclusiva más alto en comparación con `Sierra` y `Amazonía`, y el área `Rural` respectivamente.
 
-    ### Recomendaciones
+- Madres Trabajadoras: Contrario a algunas percepciones, las madres que trabajan muestran un promedio de Lactancia Materna Exclusiva más alto en este dataset. Esto podría deberse a diversos factores, como un mayor nivel educativo, acceso a información o la posibilidad de permiso de lactancia y licencias de maternidad (en los casos donde estos datos están completos).
 
-    - Fortalecer programas de promoción de lactancia materna.
+- Licencia de Maternidad: Las madres con licencia de maternidad tienen una duración de Lactancia Materna Exclusiva significativamente mayor, lo que subraya la importancia de estas políticas de apoyo.
 
-    - Impulsar políticas de apoyo a madres trabajadoras.
+- Uso de Fórmula: El análisis exploratorio sugiere que el uso de fórmula no está asociado con una menor Lactancia Materna Exclusiva
 
-    - Continuar desarrollando estudios basados en evidencia utilizando herramientas de Ciencia de Datos.
-    """)
+
+### Recomendaciones
+
+- Fortalecer programas de promoción de lactancia materna.
+
+- Impulsar políticas de apoyo para madres trabajadoras.
+
+- Continuar desarrollando análisis de Ciencia de Datos aplicados al área de salud pública.
+
+- Incorporar modelos predictivos en futuras investigaciones.
+"""
+    )
