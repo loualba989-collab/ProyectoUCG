@@ -13,11 +13,9 @@ st.set_page_config(
     layout="wide"
 )
 
-st.sidebar.title(
-    "Menú de Navegación"
-)
+st.sidebar.title("Menú")
 
-selection = st.sidebar.radio(
+menu = st.sidebar.radio(
     "Seleccione una opción",
     [
         "Inicio",
@@ -27,18 +25,14 @@ selection = st.sidebar.radio(
     ]
 )
 
-if selection == "Inicio":
-
+if menu == "Inicio":
     page_inicio()
 
-elif selection == "Visualizaciones":
-
+elif menu == "Visualizaciones":
     page_visualizaciones()
 
-elif selection == "Análisis":
-
+elif menu == "Análisis":
     page_analisis()
 
-elif selection == "Conclusiones":
-
+elif menu == "Conclusiones":
     page_conclusiones()
