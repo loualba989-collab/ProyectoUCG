@@ -22,3 +22,32 @@ menu = st.sidebar.radio(
         "Conclusiones"
     ]
 )
+
+# PAGINA INICIO
+if menu == "Inicio":
+
+    st.title(
+        "Factores asociados a la lactancia materna exclusiva en Ecuador"
+    )
+
+    st.write("""
+    Proyecto final de Ciencia de Datos utilizando información de la ENDI.
+    """)
+
+# PAGINA CARGA DE DATOS
+elif menu == "Carga de datos":
+
+    st.header("Carga del dataset")
+
+    archivo = st.file_uploader(
+        "Seleccione un archivo Excel",
+        type=["xlsx"]
+    )
+
+    if archivo is not None:
+
+        df = pd.read_excel(archivo)
+
+        st.success("Archivo cargado correctamente")
+
+        st.dataframe(df.head())
