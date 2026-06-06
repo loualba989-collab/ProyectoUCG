@@ -156,46 +156,16 @@ def page_inicio():
 # PAGINA VISUALIZACIONES
 # ======================================
 
-st.subheader("Distribución de Madres que Trabajan")
-
-trabajo_df = (
-    df["madre_trabaja"]
-    .value_counts()
-    .reset_index()
-)
-
-trabajo_df.columns = [
-    "madre_trabaja",
-    "cantidad"
-]
-
-fig_trabajo = px.pie(
-    trabajo_df,
-    names="madre_trabaja",
-    values="cantidad",
-    title="Proporción de Madres que Trabajan"
-)
-
-st.plotly_chart(
-    fig_trabajo,
-    use_container_width=True
-)
-
-st.info("""
-Interpretación:
-Este gráfico muestra la proporción de madres que trabajan y aquellas que no trabajan dentro de la muestra analizada.
-Permite conocer la composición de la población estudiada y contextualizar los resultados relacionados con la lactancia materna exclusiva.
-""")
-
-
 def page_visualizaciones():
 
-    st.title(
-        "📈 Visualizaciones"
-    )
+    st.title("📈 Visualizaciones e Interpretación de Resultados")
+
+    # =====================================================
+    # HISTOGRAMA
+    # =====================================================
 
     st.subheader(
-        "Distribución de Lactancia Materna Exclusiva"
+        "Distribución de la Lactancia Materna Exclusiva"
     )
 
     fig1 = GraficoFactory.crear_grafico(
@@ -210,8 +180,18 @@ def page_visualizaciones():
         use_container_width=True
     )
 
+    st.info("""
+    Interpretación:
+    Este gráfico muestra cómo se distribuyen los meses de lactancia materna exclusiva en la población analizada.
+    Permite identificar los valores más frecuentes y observar si existen concentraciones o dispersión en la duración de la lactancia.
+    """)
+
+    # =====================================================
+    # REGION
+    # =====================================================
+
     st.subheader(
-        "Lactancia por Región"
+        "Lactancia Materna Exclusiva por Región"
     )
 
     fig2 = GraficoFactory.crear_grafico(
@@ -228,8 +208,28 @@ def page_visualizaciones():
         use_container_width=True
     )
 
+    region_prom = (
+        df.groupby("region")
+        ["meses_lactancia_exclusiva"]
+        .mean()
+    )
+
+    region_max = region_prom.idxmax()
+
+    st.info(
+        f"""
+        Interpretación:
+        El gráfico permite comparar la distribución de la lactancia materna exclusiva entre regiones.
+        La región con mayor promedio de lactancia es: {region_max}.
+        """
+    )
+
+    # =====================================================
+    # AREA
+    # =====================================================
+
     st.subheader(
-        "Lactancia por Área"
+        "Lactancia Materna Exclusiva por Área de Residencia"
     )
 
     fig3 = GraficoFactory.crear_grafico(
@@ -238,7 +238,7 @@ def page_visualizaciones():
         x="area_residencia",
         y="meses_lactancia_exclusiva",
         color="area_residencia",
-        title="Lactancia según Área"
+        title="Lactancia según Área de Residencia"
     )
 
     st.plotly_chart(
@@ -246,8 +246,18 @@ def page_visualizaciones():
         use_container_width=True
     )
 
+    st.info("""
+    Interpretación:
+    Este gráfico permite identificar diferencias entre áreas urbanas y rurales respecto a la duración de la lactancia materna exclusiva.
+    Las diferencias observadas pueden estar asociadas a factores sociales, económicos o culturales.
+    """)
+
+    # =====================================================
+    # FORMULA
+    # =====================================================
+
     st.subheader(
-        "Uso de Fórmula"
+        "Lactancia Materna según Consumo de Fórmula"
     )
 
     fig4 = GraficoFactory.crear_grafico(
@@ -264,6 +274,94 @@ def page_visualizaciones():
         use_container_width=True
     )
 
+    st.info("""
+    Interpretación:
+    Este gráfico explora la relación entre el uso de fórmula infantil y la duración de la lactancia materna exclusiva.
+    Los resultados muestran asociaciones descriptivas y no implican causalidad directa.
+    """)
+
+    # =====================================================
+    # MADRES QUE TRABAJAN - PASTEL
+    # =====================================================
+
+    st.subheader(
+        "Distribución de Madres que Trabajan"
+    )
+
+    trabajo_df = (
+        df["madre_trabaja"]
+        .value_counts()
+        .reset_index()
+    )
+
+    trabajo_df.columns = [
+        "madre_trabaja",
+        "cantidad"
+    ]
+
+    fig5 = px.pie(
+        trabajo_df,
+        names="madre_trabaja",
+        values="cantidad",
+        title="Proporción de Madres que Trabajan"
+    )
+
+    st.plotly_chart(
+        fig5,
+        use_container_width=True
+    )
+
+    st.info("""
+    Interpretación:
+    Este gráfico muestra la proporción de madres que trabajan y aquellas que no trabajan dentro de la muestra analizada.
+    Permite conocer la composición de la población estudiada.
+    """)
+
+    # =====================================================
+    # COMPARACION TRABAJO VS LACTANCIA
+    # =====================================================
+
+    st.subheader(
+        "Promedio de Lactancia según Condición Laboral"
+    )
+
+    promedio_trabajo = (
+        df.groupby("madre_trabaja")
+        ["meses_lactancia_exclusiva"]
+        .mean()
+        .reset_index()
+    )
+
+    fig6 = px.bar(
+        promedio_trabajo,
+        x="madre_trabaja",
+        y="meses_lactancia_exclusiva",
+        color="madre_trabaja",
+        title="Promedio de Meses de Lactancia según Condición Laboral"
+    )
+
+    st.plotly_chart(
+        fig6,
+        use_container_width=True
+    )
+
+    grupo_mayor = promedio_trabajo.loc[
+        promedio_trabajo[
+            "meses_lactancia_exclusiva"
+        ].idxmax()
+    ]
+
+    st.success(
+        f"El grupo con mayor promedio de lactancia materna exclusiva es: "
+        f"{grupo_mayor['madre_trabaja']} "
+        f"con {round(grupo_mayor['meses_lactancia_exclusiva'],2)} meses."
+    )
+
+    st.info("""
+    Interpretación:
+    La comparación permite evaluar si la condición laboral de la madre está asociada con diferencias en la duración promedio de la lactancia materna exclusiva.
+    Este resultado constituye un análisis exploratorio y puede servir como base para estudios más profundos.
+    """)
 
 # ======================================
 # PAGINA ANALISIS
