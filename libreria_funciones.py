@@ -7,47 +7,44 @@ import plotly.express as px
 # CLASE DATASET (POO)
 # ======================================
 
-class DatasetLactancia:
+@st.cache_data(show_spinner=False)
+def cargar_datos(_self):
 
-    def __init__(self, filepath):
-        self.filepath = filepath
-        self.df = None
+    try:
 
-    @st.cache_data(show_spinner=False)
-    def cargar_datos(_self):
+        df_loaded = pd.read_excel(
+            _self.filepath
+        )
 
-         try:
+        # Imputación de valores nulos
+
         df_loaded["permiso_lactancia"] = (
-    df_loaded["permiso_lactancia"]
-    .fillna("Sin información")
-)
+            df_loaded["permiso_lactancia"]
+            .fillna("Sin información")
+        )
 
-df_loaded["licencia_maternidad"] = (
-    df_loaded["licencia_maternidad"]
-    .fillna("Sin información")
-)
+        df_loaded["licencia_maternidad"] = (
+            df_loaded["licencia_maternidad"]
+            .fillna("Sin información")
+        )
 
-df_loaded["dispone_lactario"] = (
-    df_loaded["dispone_lactario"]
-    .fillna("Sin información")
-)
+        df_loaded["dispone_lactario"] = (
+            df_loaded["dispone_lactario"]
+            .fillna("Sin información")
+        )
 
-            df_loaded = pd.read_excel(
-                _self.filepath
-            )
+        _self.df = df_loaded
 
-            _self.df = df_loaded
+        return df_loaded
 
-            return df_loaded
+    except Exception as e:
 
-        except Exception as e:
+        st.error(
+            f"Error al cargar datos: {e}"
+        )
 
-            st.error(
-                f"Error al cargar datos: {e}"
-            )
-
-            return None
-
+        return None
+        
 # ======================================
 # PATRÓN FACTORY
 # ======================================
