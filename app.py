@@ -63,35 +63,6 @@ elif menu == "Carga de datos":
     st.dataframe(df.head())
 
 # =========================
-# PÁGINA EXPLORACIÓN
-# =========================
-elif menu == "Exploración":
-
-    st.header("Exploración del Dataset")
-
-    st.subheader("Dimensiones")
-    st.write(df.shape)
-
-    st.subheader("Tipos de datos")
-    st.dataframe(df.dtypes)
-
-    st.subheader("Primeras filas")
-    st.dataframe(df.head())
-
-# =========================
-# PÁGINA CALIDAD DE DATOS
-# =========================
-elif menu == "Calidad de datos":
-
-    st.header("Calidad de datos")
-
-    st.subheader("Valores nulos por variable")
-    st.dataframe(df.isnull().sum())
-
-    st.subheader("Registros duplicados")
-    st.write(df.duplicated().sum())
-
-# =========================
 # PÁGINA VISUALIZACIONES
 # =========================
 elif menu == "Visualizaciones":
