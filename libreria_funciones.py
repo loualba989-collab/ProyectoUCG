@@ -587,21 +587,7 @@ def page_analisis():
     )
 
     st.markdown(f"""
-    ### Resultados obtenidos
-
-    - El promedio general de lactancia materna exclusiva fue de **{promedio_lme} meses**.
-
-    - La región con mayor duración promedio fue **{region_max}**.
-
-    - El área con mayor promedio fue **{area_max}**.
-
-    - Se identificaron diferencias entre madres trabajadoras y no trabajadoras.
-
-    - Existen diferencias territoriales importantes entre provincias del Ecuador.
-
-    - Los resultados sugieren que factores geográficos y laborales podrían estar asociados a la duración de la lactancia materna exclusiva.
-    """)
-
+    
 # ======================================
 # PAGINA CONCLUSIONES
 # ======================================
