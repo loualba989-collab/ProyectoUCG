@@ -111,7 +111,7 @@ df = dataset_instance.cargar_datos()
 def page_inicio():
 
     st.image(
-        "ENDI LOGO.png",
+        "ENDI_LOGO.png",
         width=250
     )
 
