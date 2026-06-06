@@ -307,15 +307,22 @@ def page_conclusiones():
     )
 
     st.markdown("""
-    ### Principales Hallazgos
+    ### Conclusiones
 
-    - La duración de la lactancia materna exclusiva presenta diferencias entre regiones del Ecuador.
+    - Duración de Lactancia Materna Exclusiva: El promedio de meses de lactancia materna exclusiva es de aproximadamente 33.18 meses.
 
-    - El entorno geográfico y las características sociales pueden influir en la duración de la lactancia.
+    - Factores Geográficos: La región `Costa` y el área `Urbana` muestran un promedio de LME más alto en comparación con 
+      `Sierra` y `Amazonía`, y el área `Rural` respectivamente.
 
-    - Variables como el uso de fórmula infantil y las condiciones laborales de la madre muestran patrones relevantes para futuras investigaciones.
+    - Madres Trabajadoras: Contrario a algunas percepciones, las madres que trabajan muestran un promedio de Lactancia Materna Exclusiva más alto. 
+      Esto podría deberse a diversos factores, como un mayor nivel educativo, acceso a información o la posibilidad de permiso de lactancia y licencias 
+      de maternidad (en los casos donde estos datos están completos).
+      
+    - Licencia de Maternidad: Las madres con licencia de maternidad tienen una duración de Lactancia Materna Exclusiva significativamente mayor, 
+      lo que subraya la importancia de estas políticas de apoyo.
 
-    - La Ciencia de Datos permite transformar información estadística en conocimiento útil para la toma de decisiones.
+    - Uso de Fórmula: El análisis exploratorio sugiere que el uso de fórmula no está asociado con una menor Lactancia Materna Exclusiva.
+      
 
     ### Recomendaciones
 
