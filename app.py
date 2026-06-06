@@ -25,8 +25,6 @@ menu = st.sidebar.radio(
     [
         "Inicio",
         "Carga de datos",
-        "Exploración",
-        "Calidad de datos",
         "Visualizaciones",
         "Conclusiones"
     ]
