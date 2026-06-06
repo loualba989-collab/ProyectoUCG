@@ -7,41 +7,54 @@ import plotly.express as px
 # CLASE DATASET (POO)
 # ======================================
 
-@st.cache_data(show_spinner=False)
-def cargar_datos(_self):
+class DatasetLactancia:
 
-    try:
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.df = None
 
-        df_loaded = pd.read_excel(
-            _self.filepath
-        )
+    @st.cache_data(show_spinner=False)
+    def cargar_datos(_self):
 
-        # Imputación de valores nulos
+        try:
 
-        df_loaded["permiso_lactancia"] = (
-            df_loaded["permiso_lactancia"]
-            .fillna("Sin información")
-        )
+            df_loaded = pd.read_excel(
+                _self.filepath
+            )
 
-        df_loaded["licencia_maternidad"] = (
-            df_loaded["licencia_maternidad"]
-            .fillna("Sin información")
-        )
+            # Imputación de valores nulos
 
-        df_loaded["dispone_lactario"] = (
-            df_loaded["dispone_lactario"]
-            .fillna("Sin información")
-        )
+            df_loaded["permiso_lactancia"] = (
+                df_loaded["permiso_lactancia"]
+                .fillna("Sin información")
+            )
 
-        _self.df = df_loaded
+            df_loaded["licencia_maternidad"] = (
+                df_loaded["licencia_maternidad"]
+                .fillna("Sin información")
+            )
 
-        return df_loaded
+            df_loaded["dispone_lactario"] = (
+                df_loaded["dispone_lactario"]
+                .fillna("Sin información")
+            )
 
-    except Exception as e:
+            _self.df = df_loaded
 
-        st.error(
-            f"Error al cargar datos: {e}"
-        )
+            return df_loaded
+
+        except Exception as e:
+
+            st.error(
+                f"Error al cargar datos: {e}"
+            )
+
+            return None
+
+    def dimensiones(self):
+
+        if self.df is not None:
+            return self.df.shape
 
         return None
         
