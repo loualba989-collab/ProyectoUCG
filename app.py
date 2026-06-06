@@ -42,8 +42,9 @@ if menu == "Inicio":
     st.image("ENDI_LOGO.png", width=250)
 
     st.write("""
-    Proyecto final de Ciencia de Datos utilizando información de la
-    Encuesta Nacional sobre Desnutrición Infantil (ENDI).
+    Para este proyecto, utilizaremos un dataset de la pagina oficial del Instituto Nacional de Estadistica y Cesos 
+    https://www.ecuadorencifras.gob.ec/institucional/home/ de la encuesta Nacional de Desnutrición Infantil ejecutada 
+    desde del 2023, para fines de analosis se tomo la base de datos levantada del 2024 al 2025 (Año 2 de Investigación)..
     """)
 
 # =========================
