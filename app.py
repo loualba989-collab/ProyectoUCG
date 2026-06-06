@@ -37,14 +37,16 @@ if menu == "Inicio":
 # PAGINA CARGA DE DATOS
 elif menu == "Carga de datos":
 
-    st.header("Carga del dataset")
+    st.header("Dataset utilizado")
 
-    archivo = st.file_uploader(
-        "Seleccione un archivo Excel",
-        type=["xlsx"]
-    )
+    df = pd.read_excel("Dataset Lactancia materna exclusiva ENDI")
 
-    if archivo is not None:
+    st.success("Dataset cargado correctamente")
+
+    st.write("Número de registros:", df.shape[0])
+    st.write("Número de variables:", df.shape[1])
+
+    st.dataframe(df.head())
 
         df = pd.read_excel(archivo)
 
