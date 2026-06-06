@@ -16,7 +16,21 @@ class DatasetLactancia:
     @st.cache_data(show_spinner=False)
     def cargar_datos(_self):
 
-        try:
+         try:
+        df_loaded["permiso_lactancia"] = (
+    df_loaded["permiso_lactancia"]
+    .fillna("Sin información")
+)
+
+df_loaded["licencia_maternidad"] = (
+    df_loaded["licencia_maternidad"]
+    .fillna("Sin información")
+)
+
+df_loaded["dispone_lactario"] = (
+    df_loaded["dispone_lactario"]
+    .fillna("Sin información")
+)
 
             df_loaded = pd.read_excel(
                 _self.filepath
