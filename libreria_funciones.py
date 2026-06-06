@@ -369,25 +369,68 @@ def page_visualizaciones():
 
 def page_analisis():
 
-    st.title(
-        "📊 Análisis de Resultados"
-    )
+    st.title("📊 Análisis de Resultados")
 
-    promedio = round(
+    st.markdown("""
+    En esta sección se presentan indicadores descriptivos y hallazgos obtenidos a partir del análisis exploratorio del dataset relacionado con la lactancia materna exclusiva en Ecuador.
+    """)
+
+    # =====================================================
+    # INDICADORES PRINCIPALES
+    # =====================================================
+
+    promedio_lme = round(
         df["meses_lactancia_exclusiva"].mean(),
         2
     )
 
-    st.metric(
-        "Promedio de meses de lactancia exclusiva",
-        promedio
+    max_lme = round(
+        df["meses_lactancia_exclusiva"].max(),
+        2
     )
+
+    min_lme = round(
+        df["meses_lactancia_exclusiva"].min(),
+        2
+    )
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+
+        st.metric(
+            "Promedio",
+            promedio_lme
+        )
+
+    with col2:
+
+        st.metric(
+            "Máximo",
+            max_lme
+        )
+
+    with col3:
+
+        st.metric(
+            "Mínimo",
+            min_lme
+        )
+
+    st.info("""
+    Interpretación:
+    Los indicadores resumen permiten conocer el comportamiento general de la lactancia materna exclusiva dentro de la población analizada.
+    """)
+
+    # =====================================================
+    # ANALISIS POR REGION
+    # =====================================================
 
     st.subheader(
-        "Promedio por Región"
+        "Análisis por Región"
     )
 
-    region_promedio = (
+    region_prom = (
         df.groupby("region")
         ["meses_lactancia_exclusiva"]
         .mean()
@@ -397,14 +440,29 @@ def page_analisis():
     )
 
     st.dataframe(
-        region_promedio
+        region_prom
     )
+
+    region_max = region_prom.idxmax()
+
+    st.success(
+        f"La región con mayor promedio de lactancia materna exclusiva es: {region_max}"
+    )
+
+    st.info("""
+    Interpretación:
+    Las diferencias entre regiones pueden estar asociadas a factores culturales, económicos, sociales y de acceso a servicios de salud.
+    """)
+
+    # =====================================================
+    # ANALISIS POR AREA
+    # =====================================================
 
     st.subheader(
-        "Promedio por Área"
+        "Análisis por Área de Residencia"
     )
 
-    area_promedio = (
+    area_prom = (
         df.groupby("area_residencia")
         ["meses_lactancia_exclusiva"]
         .mean()
@@ -414,17 +472,135 @@ def page_analisis():
     )
 
     st.dataframe(
-        area_promedio
+        area_prom
     )
 
-    st.subheader(
-        "Interpretación"
+    area_max = area_prom.idxmax()
+
+    st.success(
+        f"El área con mayor promedio de lactancia materna exclusiva es: {area_max}"
     )
 
-    st.write("""
-    Los resultados permiten identificar diferencias en la duración de la lactancia materna exclusiva entre regiones y áreas de residencia. Estas diferencias pueden estar asociadas a factores sociales, económicos y de acceso a servicios de salud.
+    st.info("""
+    Interpretación:
+    El área de residencia puede influir en las prácticas de alimentación infantil debido a diferencias en estilos de vida y acceso a información.
     """)
 
+    # =====================================================
+    # ANALISIS MADRE TRABAJA
+    # =====================================================
+
+    st.subheader(
+        "Análisis según Condición Laboral"
+    )
+
+    trabajo_prom = (
+        df.groupby("madre_trabaja")
+        ["meses_lactancia_exclusiva"]
+        .mean()
+        .sort_values(
+            ascending=False
+        )
+    )
+
+    st.dataframe(
+        trabajo_prom
+    )
+
+    trabajo_max = trabajo_prom.idxmax()
+
+    st.success(
+        f"El grupo con mayor promedio de lactancia corresponde a: {trabajo_max}"
+    )
+
+    st.info("""
+    Interpretación:
+    La condición laboral de la madre puede influir en la continuidad de la lactancia materna exclusiva.
+    Este análisis permite observar diferencias descriptivas entre grupos.
+    """)
+
+    # =====================================================
+    # ANALISIS FORMULA INFANTIL
+    # =====================================================
+
+    st.subheader(
+        "Análisis según Consumo de Fórmula"
+    )
+
+    formula_prom = (
+        df.groupby("consume_formula")
+        ["meses_lactancia_exclusiva"]
+        .mean()
+        .sort_values(
+            ascending=False
+        )
+    )
+
+    st.dataframe(
+        formula_prom
+    )
+
+    formula_max = formula_prom.idxmax()
+
+    st.success(
+        f"El grupo con mayor promedio de lactancia corresponde a: {formula_max}"
+    )
+
+    st.info("""
+    Interpretación:
+    El consumo de fórmula infantil puede estar relacionado con cambios en las prácticas de lactancia.
+    Los resultados presentados son exploratorios y descriptivos.
+    """)
+
+    # =====================================================
+    # RANKING PROVINCIAS
+    # =====================================================
+
+    st.subheader(
+        "Ranking de Provincias"
+    )
+
+    ranking = (
+        df.groupby("provincia")
+        ["meses_lactancia_exclusiva"]
+        .mean()
+        .sort_values(
+            ascending=False
+        )
+    )
+
+    st.dataframe(
+        ranking
+    )
+
+    st.info("""
+    Interpretación:
+    El ranking provincial permite identificar territorios con mayores y menores promedios de lactancia materna exclusiva.
+    """)
+
+    # =====================================================
+    # HALLAZGOS PRINCIPALES
+    # =====================================================
+
+    st.subheader(
+        "Hallazgos Principales"
+    )
+
+    st.markdown(f"""
+    ### Resultados obtenidos
+
+    - El promedio general de lactancia materna exclusiva fue de **{promedio_lme} meses**.
+
+    - La región con mayor duración promedio fue **{region_max}**.
+
+    - El área con mayor promedio fue **{area_max}**.
+
+    - Se identificaron diferencias entre madres trabajadoras y no trabajadoras.
+
+    - Existen diferencias territoriales importantes entre provincias del Ecuador.
+
+    - Los resultados sugieren que factores geográficos y laborales podrían estar asociados a la duración de la lactancia materna exclusiva.
+    """)
 
 # ======================================
 # PAGINA CONCLUSIONES
