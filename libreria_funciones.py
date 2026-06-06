@@ -117,7 +117,7 @@ st.set_page_config(
     layout="wide"
 )
 
-DATA_PATH = '/content/Dataset Lactancia materna exclusiva ENDI.xlsx'
+DATA_PATH = "lactancia_analisis.xlsx"
 
 @st.cache_resource
 def get_dataset_instance(path):
