@@ -232,6 +232,37 @@ def page_visualizaciones():
         use_container_width=True
     )
 
+st.subheader("Distribución de Madres que Trabajan")
+
+trabajo_df = (
+    df["madre_trabaja"]
+    .value_counts()
+    .reset_index()
+)
+
+trabajo_df.columns = [
+    "madre_trabaja",
+    "cantidad"
+]
+
+fig_trabajo = px.pie(
+    trabajo_df,
+    names="madre_trabaja",
+    values="cantidad",
+    title="Proporción de Madres que Trabajan"
+)
+
+st.plotly_chart(
+    fig_trabajo,
+    use_container_width=True
+)
+
+st.info("""
+Interpretación:
+Este gráfico muestra la proporción de madres que trabajan y aquellas que no trabajan dentro de la muestra analizada.
+Permite conocer la composición de la población estudiada y contextualizar los resultados relacionados con la lactancia materna exclusiva.
+""")
+
 
 # ======================================
 # PAGINA ANALISIS
