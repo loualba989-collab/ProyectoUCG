@@ -4,11 +4,20 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
+# Configuración de la página
 st.set_page_config(
     page_title="Lactancia Materna Ecuador",
     layout="wide"
 )
 
+# Cargar dataset una sola vez
+@st.cache_data
+def cargar_datos():
+    return pd.read_excel("lactancia_analisis.xlsx")
+
+df = cargar_datos()
+
+# Menú lateral
 st.sidebar.title("Menú")
 
 menu = st.sidebar.radio(
@@ -23,23 +32,28 @@ menu = st.sidebar.radio(
     ]
 )
 
-# PAGINA INICIO
+# =========================
+# PÁGINA INICIO
+# =========================
 if menu == "Inicio":
 
     st.title(
         "Factores asociados a la lactancia materna exclusiva en Ecuador"
     )
 
+    st.image("ENDI_LOGO.png", width=250)
+
     st.write("""
-    Proyecto final de Ciencia de Datos utilizando información de la ENDI.
+    Proyecto final de Ciencia de Datos utilizando información de la
+    Encuesta Nacional sobre Desnutrición Infantil (ENDI).
     """)
 
-# PAGINA CARGA DE DATOS
+# =========================
+# PÁGINA CARGA DE DATOS
+# =========================
 elif menu == "Carga de datos":
 
     st.header("Dataset utilizado")
-
-    df = pd.read_excel("Dataset Lactancia materna exclusiva ENDI")
 
     st.success("Dataset cargado correctamente")
 
@@ -48,8 +62,53 @@ elif menu == "Carga de datos":
 
     st.dataframe(df.head())
 
-        df = pd.read_excel(archivo)
+# =========================
+# PÁGINA EXPLORACIÓN
+# =========================
+elif menu == "Exploración":
 
-        st.success("Archivo cargado correctamente")
+    st.header("Exploración del Dataset")
 
-        st.dataframe(df.head())
+    st.subheader("Dimensiones")
+    st.write(df.shape)
+
+    st.subheader("Tipos de datos")
+    st.dataframe(df.dtypes)
+
+    st.subheader("Primeras filas")
+    st.dataframe(df.head())
+
+# =========================
+# PÁGINA CALIDAD DE DATOS
+# =========================
+elif menu == "Calidad de datos":
+
+    st.header("Calidad de datos")
+
+    st.subheader("Valores nulos por variable")
+    st.dataframe(df.isnull().sum())
+
+    st.subheader("Registros duplicados")
+    st.write(df.duplicated().sum())
+
+# =========================
+# PÁGINA VISUALIZACIONES
+# =========================
+elif menu == "Visualizaciones":
+
+    st.header("Visualizaciones")
+
+    st.info(
+        "Aquí agregaremos los gráficos de lactancia materna exclusiva."
+    )
+
+# =========================
+# PÁGINA CONCLUSIONES
+# =========================
+elif menu == "Conclusiones":
+
+    st.header("Conclusiones")
+
+    st.write(
+        "Aquí se presentarán las conclusiones obtenidas del análisis."
+    )
