@@ -510,7 +510,7 @@ def page_analisis():
     trabajo_max = trabajo_prom.idxmax()
 
     st.success(
-        f"El grupo con mayor promedio de lactancia corresponde a: {trabajo_max}"
+        f"El grupo con mayor promedio de lactancia corresponde a: {trabajo_max} la madre trabaja"
     )
 
     st.info("""
@@ -543,7 +543,7 @@ def page_analisis():
     formula_max = formula_prom.idxmax()
 
     st.success(
-        f"El grupo con mayor promedio de lactancia corresponde a: {formula_max}"
+        f"El grupo con mayor promedio de consumo de leche de formula se da a los 42.22 meses"
     )
 
     st.info("""
