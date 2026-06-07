@@ -642,22 +642,30 @@ def page_conclusiones():
 
 ### Conclusiones
 
-- El promedio general de lactancia materna exclusiva fue de **{promedio} meses**.
+- El promedio general de lactancia materna exclusiva fue de **{promedio} meses**, pero más del 50% de los niños reciben lactancia exclusiva por períodos muy cortos, por debajo de los 6 meses recomendados por la OMS.
 
 - Factores Geográficos: La región `Costa` y el área `Urbana` muestran un promedio de Lactancia Materna Exclusiva más alto en comparación con `Sierra` y `Amazonía`, y el área `Rural` respectivamente.
 
-- Madres Trabajadoras: Contrario a algunas percepciones, las madres que trabajan muestran un promedio de Lactancia Materna Exclusiva más alto en este dataset. Esto podría deberse a diversos factores, como un mayor nivel educativo, acceso a información o la posibilidad de permiso de lactancia y licencias de maternidad (en los casos donde estos datos están completos).
+- Las madres del área rural tienden a mantener la LME por más tiempo que las del área urbana, aunque la diferencia no es determinante por sí sola.
 
-- Licencia de Maternidad: Las madres con licencia de maternidad tienen una duración de Lactancia Materna Exclusiva significativamente mayor, lo que subraya la importancia de estas políticas de apoyo.
+- El consumo de fórmula infantil se asocia directamente con una menor duración de la LME, siendo uno de los factores con mayor impacto negativo en esta práctica.
 
-- Uso de Fórmula: El análisis exploratorio sugiere que el uso de fórmula no está asociado con una menor Lactancia Materna Exclusiva
+- El uso de biberón también reduce la duración de la lactancia exclusiva al interferir con el proceso natural de amamantamiento.
+
+- Las madres con acceso a mecanismos de apoyo a la lactancia mantienen la LME por períodos más prolongados, destacando el rol clave del sistema de salud.
+
+- Los datos de la ENDI permiten concluir que la LME en Ecuador es una práctica influenciada por múltiples factores sociales, geográficos y económicos que deben abordarse de manera integral.
 
 
 ### Recomendaciones
 
 - Fortalecer programas de promoción de lactancia materna.
 
-- Impulsar políticas de apoyo para madres trabajadoras.
+- Diseñar políticas territoriales diferenciadas, las estrategias de promoción de la LME deben adaptarse a las características culturales, económicas y geográficas de cada territorio, priorizando las zonas con menores tasas de lactancia exclusiva.
+
+- Se recomienda fortalecer la implementación de salas de lactancia en empresas e instituciones públicas, respetar el período de lactancia establecido en la legislación laboral ecuatoriana y promover licencias de maternidad más extensas.
+
+- Es fundamental que las madres reciban información clara y oportuna sobre los beneficios de la lactancia exclusiva, las técnicas correctas de amamantamiento y los riesgos del uso temprano de fórmulas, desde las consultas prenatales y con seguimiento en el posparto inmediato.
 
 - Continuar desarrollando análisis de Ciencia de Datos aplicados al área de salud pública.
 
